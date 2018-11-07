@@ -13,13 +13,24 @@ class App extends React.Component {
   };
 
   componentWillMount() {
-    // On modifie que le magasin qu'on obtient via le router
+    // On modifie uniquement le magasin qu'on obtient via le router
     const { params } = this.props.match;
-    console.log(`${params.storeId}/fishes`);
+    // first resinstate our localStorage
+    const localStorageRef = localStorage.getItem(params.storeId);
+    if (localStorageRef) {
+      this.setState({ order: JSON.parse(localStorageRef) });
+    }
     this.ref = base.syncState(`${params.storeId}/fishes`, {
       context: this,
       state: "fishes"
     });
+  }
+
+  componentDidUpdate() {
+    localStorage.setItem(
+      this.props.match.params.storeId,
+      JSON.stringify(this.state.order)
+    );
   }
 
   componentWillUnmount() {
