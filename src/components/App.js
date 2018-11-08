@@ -12,7 +12,7 @@ class App extends React.Component {
     order: {}
   };
 
-  componentWillMount() {
+  componentDidMount() {
     // On modifie uniquement le magasin qu'on obtient via le router
     const { params } = this.props.match;
     // first resinstate our localStorage
@@ -37,10 +37,14 @@ class App extends React.Component {
     base.removeBinding(this.ref);
   }
 
+  loadSampleFishes = () => {
+    this.setState({ fishes: sampleFishes });
+  };
+
   addFish = fish => {
-    // .1 Take a copy of the existing state
+    // 1. Take a copy of the existing state
     const fishes = { ...this.state.fishes };
-    // .2 Add our new fish to that fishes variable
+    // 2. Add our new fish to that fishes variable
     fishes[`fish${Date.now()}`] = fish;
     // 3. Set the new fishes object to state
     this.setState({ fishes });
@@ -54,8 +58,13 @@ class App extends React.Component {
     this.setState({ order });
   };
 
-  loadSampleFishes = () => {
-    this.setState({ fishes: sampleFishes });
+  updateFish = (key, updatedFish) => {
+    // 1. Take a copy of the existing state
+    const fishes = { ...this.state.fishes };
+    // 2.Update that state
+    fishes[key] = updatedFish;
+    // 3. Set that to state
+    this.setState({ fishes });
   };
 
   render() {
@@ -79,6 +88,8 @@ class App extends React.Component {
         <Inventory
           addFish={this.addFish}
           loadSampleFishes={this.loadSampleFishes}
+          fishes={this.state.fishes}
+          updateFish={this.updateFish}
         />
       </div>
     );
