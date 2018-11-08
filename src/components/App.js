@@ -48,13 +48,22 @@ class App extends React.Component {
     fishes[`fish${Date.now()}`] = fish;
     // 3. Set the new fishes object to state
     this.setState({ fishes });
+    // fishes => shortcut for fishes: fishes
   };
 
   addToOrder = key => {
+    // 1. Take a copy of the existing state
     const order = { ...this.state.order };
     // 2. Either add to order, or update the number in our order
     order[key] = order[key] + 1 || 1;
     // 3. Call setState to update our state object
+    this.setState({ order });
+  };
+
+  removeFromOrder = key => {
+    const order = { ...this.state.order };
+    // Because it is not saved in Firebase we can use delete
+    delete order[key];
     this.setState({ order });
   };
 
@@ -64,6 +73,15 @@ class App extends React.Component {
     // 2.Update that state
     fishes[key] = updatedFish;
     // 3. Set that to state
+    this.setState({ fishes });
+  };
+
+  deleteFish = key => {
+    // 1. Take a copy of the existing state
+    const fishes = { ...this.state.fishes };
+    // 2. Update the fish
+    fishes[key] = null;
+    // 3 Set to state
     this.setState({ fishes });
   };
 
@@ -80,16 +98,22 @@ class App extends React.Component {
                 index={key}
                 details={this.state.fishes[key]}
                 addToOrder={this.addToOrder}
+                removeFromOrder={this.removeFromOrder}
               />
             ))}
           </ul>
         </div>
-        <Order fishes={this.state.fishes} order={this.state.order} />
+        <Order
+          fishes={this.state.fishes}
+          order={this.state.order}
+          removeFromOrder={this.removeFromOrder}
+        />
         <Inventory
           addFish={this.addFish}
           loadSampleFishes={this.loadSampleFishes}
           fishes={this.state.fishes}
           updateFish={this.updateFish}
+          deleteFish={this.deleteFish}
         />
       </div>
     );

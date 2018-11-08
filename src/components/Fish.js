@@ -18,6 +18,10 @@ class Fish extends React.Component {
         <button disabled={!isAvailable} onClick={this.handleClick}>
           {isAvailable ? "Add To Order" : "Sold Out"}
         </button>
+        <button onClick={() => this.props.removeFromOrder(this.props.index)}>
+          {" "}
+          Remove order{" "}
+        </button>
       </li>
     );
   }
